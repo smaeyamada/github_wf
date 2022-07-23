@@ -11,5 +11,9 @@ jobs:
 
       - name: check branch
         run: |
-          echo ${{ github.head_ref }}
-          echo "main branch"
+          echo '1' $GITHUB_REF
+          echo '2' ${{ github.ref }}
+          echo '3' ${{ github.ref_name }}
+          echo '4' ${{ github.head_ref }}
+          echo '5' ${{ github.base_ref }}
+          echo "main develop"
