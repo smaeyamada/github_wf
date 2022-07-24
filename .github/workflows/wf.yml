@@ -2,6 +2,13 @@ name: Test wf
 on:
   push:
     branches: ['main', 'develop']
+  workflow_dispatch:
+    inputs:
+      cache_flg:
+        description: 'cache flag'
+        default: true
+        required: true
+        type: boolean
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -17,3 +24,7 @@ jobs:
           echo '4' ${{ github.head_ref }}
           echo '5' ${{ github.base_ref }}
           echo "main develop"
+
+      - name: check input
+        run: |
+          echo "cache_flg: ${{ inputs.cache_flg }}"
