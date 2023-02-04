@@ -9,7 +9,6 @@ jobs:
       - name: First step
         run: |
           echo "[info] This is setup job."
-          sleep 30
           exit 0
 
   build:
@@ -19,7 +18,6 @@ jobs:
       - name: Build
         run: |
           echo "[info] This is build job."
-          sleep 30
           exit 1
 
   result:
@@ -27,7 +25,7 @@ jobs:
     needs: [setup, build]
     runs-on: ubuntu-latest
     steps:
-      - name: Return result
+      - name: Wait step
         run: |
           echo "[info] This is build job."
           sleep 30
@@ -36,4 +34,12 @@ jobs:
       - name: Check job results
         run: |
           echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
-          exit 0
+          if [ ${{ needs.setup.result}} != 'success' ]; then
+            echo "[info] Setup job is not success."
+            exit 1
+          fi
+          if [ ${{ needs.build.result}} != 'success' ]; then
+            echo "[info] Build job is not success."
+            exit 1
+          fi
+          echo "[info] All jobs success."
