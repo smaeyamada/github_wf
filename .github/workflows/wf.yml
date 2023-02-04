@@ -49,7 +49,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ needs.build.result == 'success' || needs.build.result != 'success' }}
+    if: ${{ needs.setup.result == 'success' || needs.setup.result != 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
@@ -61,6 +61,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "[info] Second step."
+          echo "[debug] setup result: ${{ needs.setup.result }}"
+          echo "[debug] build result: ${{ needs.build.result }}"
           exit 0
 
       - name: Check job results
