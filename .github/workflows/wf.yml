@@ -25,7 +25,7 @@ jobs:
 
   build:
     needs: setup
-    if: ${{ needs.setup.outputs.action == "execute" }}
+    if: ${{ needs.setup.outputs.action == 'execute' }}
     runs-on: ubuntu-latest
     steps:
       - name: Build
