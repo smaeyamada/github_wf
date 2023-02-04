@@ -47,15 +47,15 @@ jobs:
     steps:
       - name: Wait step
         run: |
+          echo '${{ toJSON(needs) }}'
           echo "[info] This is build job."
-          echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
           sleep 30
 
       - name: Second step
         continue-on-error: true
         run: |
+          echo '${{ toJSON(needs) }}'
           echo "[info] Second step."
-          echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
           exit 0
 
       - name: Check job results
