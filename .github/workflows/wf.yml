@@ -42,19 +42,17 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ always() }}
+    if: ${{ needs.setup.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
         run: |
-          echo '${{ toJSON(needs) }}'
           echo "[info] This is build job."
           sleep 30
 
       - name: Second step
         continue-on-error: true
         run: |
-          echo '${{ toJSON(needs) }}'
           echo "[info] Second step."
           exit 0
 
