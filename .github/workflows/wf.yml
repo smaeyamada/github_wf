@@ -46,6 +46,7 @@ jobs:
         if: always()
         run: |
           echo "[info] last processing."
+          echo "[debug] setup result: ${{ needs.setup.result }}"
 
   result:
     needs: [setup, build]
