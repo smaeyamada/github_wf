@@ -51,7 +51,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ needs.setup.outputs.action == 'execute' || needs.setup.outputs.action != 'execute' }}
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
