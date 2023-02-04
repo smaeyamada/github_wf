@@ -42,7 +42,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ !cancelled() }}
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
@@ -57,7 +57,6 @@ jobs:
           exit 0
 
       - name: Check job results
-        if: always()
         run: |
           echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
           if [ ${{ needs.setup.result}} != 'success' ]; then
