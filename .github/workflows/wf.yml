@@ -42,7 +42,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
@@ -50,11 +50,11 @@ jobs:
           echo "[info] This is build job."
           sleep 30
 
-      # - name: Second step
-      #   continue-on-error: true
-      #   run: |
-      #     echo "[info] Second step."
-      #     exit 0
+      - name: Second step
+        continue-on-error: true
+        run: |
+          echo "[info] Second step."
+          exit 0
 
       - name: Check job results
         if: always()
