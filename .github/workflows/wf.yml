@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: |
           echo "[info] This is build job."
-          if [ ${{ matrix.env == 'build-2' }} ]; then
+          if [ ${{ matrix.env }} == 'build-2' ]; then
             exit 1
           fi
           exit 0
