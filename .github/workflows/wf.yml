@@ -1,26 +1,39 @@
 name: Test wf
 on:
-  push:
-    branches: ['main', 'develop']
-  workflow_dispatch:
-    inputs:
-      cache_flg:
-        description: 'cache flag'
-        default: true
-        required: true
-        type: boolean
+  pull_request:
+    branches: ['main']
 jobs:
-  build_and_push:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: check branch
+      - name: First step
         run: |
-          echo ${{ github.head_ref }}
-          echo "main branch"
+          echo "[info] This is setup job."
+          sleep 30
+          exit 0
 
-      - name: check input
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
         run: |
-          echo "cache_flg: ${{ inputs.cache_flg }}"
+          echo "[info] This is build job."
+          sleep 30
+          exit 0
+
+  result:
+    if: always()
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Return result
+        run: |
+          echo "[info] This is build job."
+          sleep 30
+          exit 0
+
+      - name: Check job results
+        run: |
+          echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join("\n")'
+          exit 0
