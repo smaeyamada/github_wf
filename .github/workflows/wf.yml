@@ -51,8 +51,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ (needs.setup.result == 'success' || needs.setup.result != 'success') &&
-            (needs.build.result == 'success' || needs.build.result != 'success') }}
+    if: ${{ needs.setup.outputs.action == 'execute' }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
