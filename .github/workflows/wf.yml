@@ -42,7 +42,7 @@ jobs:
 
   result:
     needs: [setup, build]
-    if: ${{ !failure() || failure() }}
+    if: ${{ success() || !success() }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
