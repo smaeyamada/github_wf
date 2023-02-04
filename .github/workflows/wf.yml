@@ -20,14 +20,14 @@ jobs:
           # echo "::set-output name=action::execute"
           echo "action=execute" >> $GITHUB_ENV
 
-      # - name: Last step
-      #   if: always()
-      #   run: |
-      #     echo "[info] last processing."
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
 
   build:
     needs: setup
-    if: ${{ needs.setup.outputs.action == 'execute' }}
+    # if: ${{ needs.setup.outputs.action == 'execute' }}
     runs-on: ubuntu-latest
     steps:
       - name: Build
@@ -35,10 +35,10 @@ jobs:
           echo "[info] This is build job."
           exit 0
 
-      # - name: Last step
-      #   if: always()
-      #   run: |
-      #     echo "[info] last processing."
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
 
   result:
     needs: [setup, build]
@@ -51,6 +51,7 @@ jobs:
           sleep 30
 
       - name: Second step
+        continue-on-error: true
         run: |
           echo "[info] Second step."
           exit 0
