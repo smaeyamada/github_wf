@@ -49,12 +49,11 @@ jobs:
         run: |
           echo "[info] This is build job."
           sleep 30
-          exit 0
 
       - name: Second step
         run: |
           echo "[info] Second step."
-          exit 0
+          exit 1
 
       - name: Check job results
         run: |
