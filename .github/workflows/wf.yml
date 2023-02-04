@@ -20,10 +20,10 @@ jobs:
           # echo "::set-output name=action::execute"
           echo "action=execute" >> $GITHUB_ENV
 
-      - name: Last step
-        if: always()
-        run: |
-          echo "[info] last processing."
+      # - name: Last step
+      #   if: always()
+      #   run: |
+      #     echo "[info] last processing."
 
   build:
     needs: setup
@@ -35,10 +35,10 @@ jobs:
           echo "[info] This is build job."
           exit 0
 
-      - name: Last step
-        if: always()
-        run: |
-          echo "[info] last processing."
+      # - name: Last step
+      #   if: always()
+      #   run: |
+      #     echo "[info] last processing."
 
   result:
     needs: [setup, build]
@@ -53,9 +53,10 @@ jobs:
       - name: Second step
         run: |
           echo "[info] Second step."
-          exit 1
+          exit 0
 
       - name: Check job results
+        if: always()
         run: |
           echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
           if [ ${{ needs.setup.result}} != 'success' ]; then
