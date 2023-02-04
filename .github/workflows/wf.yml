@@ -6,7 +6,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      action: ${{ steps.out_step.outputs.action }}
+      # action: ${{ steps.out_step.outputs.action }}
+      action: ${{ env.action }}
     steps:
       - name: First step
         run: |
@@ -16,7 +17,8 @@ jobs:
       - name: Out step
         id: out_step
         run: |
-          echo "::set-output name=action::execute"
+          # echo "::set-output name=action::execute"
+          echo "action=execute" >> $GITHUB_ENV
 
       - name: Last step
         if: always()
@@ -31,7 +33,7 @@ jobs:
       - name: Build
         run: |
           echo "[info] This is build job."
-          exit 1
+          exit 0
 
       - name: Last step
         if: always()
