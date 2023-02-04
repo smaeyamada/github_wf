@@ -52,7 +52,6 @@ jobs:
           exit 0
 
       - name: Second step
-        continue-on-error: true
         run: |
           echo "[info] Second step."
           exit 0
