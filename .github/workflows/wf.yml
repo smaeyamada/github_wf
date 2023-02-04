@@ -5,14 +5,27 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    outputs:
+      action: ${{ steps.out_step.outputs.action }}
     steps:
       - name: First step
         run: |
           echo "[info] This is setup job."
           exit 0
 
+      - name: Out step
+        id: out_step
+        run: |
+          echo "::set-output name=action::execute"
+
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
+
   build:
     needs: setup
+    if: ${{ needs.setup.outputs.action == "execute" }}
     runs-on: ubuntu-latest
     steps:
       - name: Build
@@ -20,16 +33,27 @@ jobs:
           echo "[info] This is build job."
           exit 1
 
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
+
   result:
-    if: always()
     needs: [setup, build]
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Wait step
         run: |
           echo "[info] This is build job."
           sleep 30
-          exit 1
+          exit 0
+
+      - name: Second step
+        continue-on-error: true
+        run: |
+          echo "[info] Second step."
+          exit 0
 
       - name: Check job results
         run: |
