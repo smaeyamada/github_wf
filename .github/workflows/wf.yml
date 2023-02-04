@@ -17,7 +17,7 @@ jobs:
       - name: Out step
         id: out_step
         run: |
-          # echo "::set-output name=action::skip"
+          # echo "::set-output name=action::execute"
           echo "action=execute" >> $GITHUB_ENV
 
       - name: Last step
@@ -37,6 +37,7 @@ jobs:
       - name: Build
         run: |
           echo "[info] This is build job."
+          echo "[debug] setup outputs action: ${{ needs.setup.outputs.action }}"
           if [ ${{ matrix.env }} == 'build-2' ]; then
             exit 1
           fi
