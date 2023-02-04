@@ -5,29 +5,29 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    # outputs:
-    #   action: ${{ steps.out_step.outputs.action }}
-    #   action: ${{ env.action }}
+    outputs:
+      # action: ${{ steps.out_step.outputs.action }}
+      action: ${{ env.action }}
     steps:
       - name: First step
         run: |
           echo "[info] This is setup job."
           exit 0
 
-      # - name: Out step
-      #   id: out_step
-      #   run: |
-      #     # echo "::set-output name=action::execute"
-      #     echo "action=execute" >> $GITHUB_ENV
+      - name: Out step
+        id: out_step
+        run: |
+          # echo "::set-output name=action::execute"
+          echo "action=execute" >> $GITHUB_ENV
 
-      # - name: Last step
-      #   if: always()
-      #   run: |
-      #     echo "[info] last processing."
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
 
   build:
     needs: setup
-    # if: ${{ needs.setup.outputs.action == 'execute' }}
+    if: ${{ needs.setup.outputs.action == 'execute' }}
     runs-on: ubuntu-latest
     steps:
       - name: Build
@@ -35,10 +35,10 @@ jobs:
           echo "[info] This is build job."
           exit 0
 
-      # - name: Last step
-      #   if: always()
-      #   run: |
-      #     echo "[info] last processing."
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
 
   result:
     needs: [setup, build]
@@ -57,7 +57,7 @@ jobs:
       #     exit 0
 
       - name: Check job results
-        # if: always()
+        if: always()
         run: |
           echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
           if [ ${{ needs.setup.result}} != 'success' ]; then
