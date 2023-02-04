@@ -5,9 +5,9 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      # action: ${{ steps.out_step.outputs.action }}
-      # action: ${{ env.action }}
+    # outputs:
+    #   action: ${{ steps.out_step.outputs.action }}
+    #   action: ${{ env.action }}
     steps:
       - name: First step
         run: |
