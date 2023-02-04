@@ -1,26 +1,83 @@
 name: Test wf
 on:
-  push:
-    branches: ['main', 'develop']
-  workflow_dispatch:
-    inputs:
-      cache_flg:
-        description: 'cache flag'
-        default: true
-        required: true
-        type: boolean
+  pull_request:
+    branches: ['main']
 jobs:
-  build_and_push:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      # action: ${{ steps.out_step.outputs.action }}
+      action: ${{ env.action }}
+    steps:
+      - name: First step
+        run: |
+          echo "[info] This is setup job."
+          exit 0
+
+      - name: Out step
+        id: out_step
+        run: |
+          # echo "::set-output name=action::execute"
+          echo "action=execute" >> $GITHUB_ENV
+
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
+
+  build:
+    needs: setup
+    if: ${{ needs.setup.outputs.action == 'execute' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        env: ['build-1', 'build-2']
+    steps:
+      - name: Build
+        run: |
+          echo "[info] This is build job."
+          echo "[debug] setup outputs action: ${{ needs.setup.outputs.action }}"
+          if [ ${{ matrix.env }} == 'build-2' ]; then
+            exit 0
+          fi
+          exit 0
+
+      - name: Last step
+        if: always()
+        run: |
+          echo "[info] last processing."
+          echo "[debug] setup result: ${{ needs.setup.result }}"
+
+  result:
+    needs: [setup, build]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: check branch
+      - name: Wait step
         run: |
-          echo ${{ github.head_ref }}
-          echo "main branch"
+          echo "[info] This is build job."
+          sleep 30
+          exit 1
 
-      - name: check input
+      - name: Second step
+        continue-on-error: true
         run: |
-          echo "cache_flg: ${{ inputs.cache_flg }}"
+          echo "[info] Second step."
+          echo "[debug] setup result: ${{ needs.setup.result }}"
+          echo "[debug] build result: ${{ needs.build.result }}"
+          exit 0
+
+      - name: Check job results
+        if: always()
+        run: |
+          echo '${{ toJSON(needs) }}' | jq 'to_entries | map(.key + " " + .value.result) | join(" - ")'
+          if [ ${{ needs.setup.result}} != 'success' ]; then
+            echo "[info] Setup job is not success."
+            exit 1
+          fi
+          if [ ${{ needs.build.result }} != 'success' ]; then
+            echo "[info] Build job is not success."
+            exit 1
+          fi
+          echo "[info] All jobs success."
