@@ -39,7 +39,7 @@ jobs:
           echo "[info] This is build job."
           echo "[debug] setup outputs action: ${{ needs.setup.outputs.action }}"
           if [ ${{ matrix.env }} == 'build-2' ]; then
-            exit 1
+            exit 0
           fi
           exit 0
 
@@ -58,6 +58,7 @@ jobs:
         run: |
           echo "[info] This is build job."
           sleep 30
+          exit 1
 
       - name: Second step
         continue-on-error: true
